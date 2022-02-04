@@ -1,7 +1,7 @@
 import nltk
 from nltk.corpus import words
 import tkinter as tk
-Ewords = [word.lower() for word in words.words() if len(word)==5]
+AllWords = [word.lower() for word in words.words() if len(word)==5]
 
 def getWords(words,p,w):
     return [word for word in words if word[p]==w]
@@ -27,8 +27,8 @@ def notWithWords(words,X):
     return A
 
 def getPossibleWords(X,C,Cp,Xp):
-    global Ewords
-    Ewords = notWithWords(Ewords,X)
+    global AllWords
+    Ewords = notWithWords(AllWords,X)
     Ewords = withWords(Ewords,C)
     for i in range(5):
         if Cp[i]!="":
@@ -78,13 +78,12 @@ class UserInterface:
         X = []
         if self.notPresent.get() is not None:
             X = self.notPresent.get().strip().lower()
-        wordList = getPossibleWords(X,C,CP,XP)[0:40]
-        print(X,C,CP,XP,sep=" || ")
+        wordList = getPossibleWords(X,C,CP,XP)
         allWords = tk.Text(self.window,width=7)
         for i,word in enumerate(wordList):
             allWords.insert(tk.END, f"{word}\n")
-        allWords.grid(row = 7, column = 0, rowspan=len(wordList))
-
+        allWords.grid(row = 7, column = 0, rowspan=len(wordList)+1)
+        
     def showWordsTobeEntered(self):
         print("Bo")
         self.allPossibleWords = []
