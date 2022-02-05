@@ -37,7 +37,13 @@ def getPossibleWords(X,C,Cp,Xp):
             Ewords = getWordsNot(Ewords,i,Xp[i])
     return list(set(Ewords))
 def wordsToTry(X,C,Cp,Xp):
-    all_words = X+C
+    newX = X+"".join(Cp)
+    newC = C
+    newCp = [""]*5
+    for letter in Cp:
+        newC = newC.replace(letter,"")      
+    return getPossibleWords(newX,newC,newCp,Xp)
+    
 def main():
     X = "grhcswu"
     C = "peat"
@@ -57,9 +63,8 @@ class UserInterface:
         self.notPresent = ""
         self.window = tk.Tk()
         self.window.title("Wordle Helper")
-        self.window.geometry("480x480")
+        self.window.geometry("")
     def showPossibleWords(self):
-        print("Hi")
         CP = []
         XP = []
         for i in self.selected:
@@ -82,12 +87,15 @@ class UserInterface:
         allWords = tk.Text(self.window,width=7)
         for i,word in enumerate(wordList):
             allWords.insert(tk.END, f"{word}\n")
-        allWords.grid(row = 7, column = 0, rowspan=len(wordList)+1)
+        allWords.grid(row = 8, column = 0, rowspan=len(wordList)+1)
+        self.showWordsTobeEntered(X,C,CP,XP)
         
-    def showWordsTobeEntered(self):
-        print("Bo")
-        self.allPossibleWords = []
-        self.bestGuesses =  ["Words"]
+    def showWordsTobeEntered(self,X,C,CP,XP):
+        wordList = wordsToTry(X,C,CP,XP)
+        allWords = tk.Text(self.window,width=7)
+        for i,word in enumerate(wordList):
+            allWords.insert(tk.END, f"{word}\n")
+        allWords.grid(row = 8, column = 3, rowspan=len(wordList)+1)
 
     def GUI(self):
         options = ["Select"] + [f"  {chr(ord('A')+i)}  " for i in range(26)]
@@ -111,12 +119,12 @@ class UserInterface:
         self.notPresent.set(" ")
         notPresentEntry = tk.Entry(self.window, textvariable=self.notPresent)
         notPresentEntry.grid(row = 5, column = 3, sticky = tk.W, pady = 2, columnspan=5)
-        submit = tk.Button(self.window, text = "Show Possible Words", command = self.showPossibleWords)
-        submit.grid(row=6, column = 0, sticky =tk.W, pady = 2, columnspan=3)
-
-        submit1 = tk.Button(self.window, text = "Show Word to Guess", command = self.showWordsTobeEntered)
-        submit1.grid(row=6, column = 3, sticky =tk.W, pady = 2, columnspan=3)
-        
+        submit = tk.Button(self.window, text = "Unravel", command = self.showPossibleWords)
+        submit.grid(row=6, column = 2, sticky =tk.W, pady = 2, columnspan=3)
+        l3 = tk.Label(self.window, text = "Possible Words")
+        l3.grid(row=7, column = 0, sticky = tk.W, pady = 2, columnspan=3)
+        l4 = tk.Label(self.window, text = "Best Guess")
+        l4.grid(row=7, column = 3, sticky = tk.W, pady = 2, columnspan=3)
         self.window.mainloop()
 UserInterface().GUI()
 
